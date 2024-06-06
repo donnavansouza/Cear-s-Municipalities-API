@@ -1,5 +1,5 @@
 import json
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.responses import JSONResponse
 from fastapi.middleware.cors import CORSMiddleware
 # Initialize FastAPI application
@@ -22,10 +22,13 @@ with open('localization.json') as file:
     data = json.load(file)['Worksheet']
     
 
-
 # Root endpoint: returns all the data
 @app.get("/")
 def read_root():
+    return {"message": "API is up and running."}
+
+@app.get("/municipalities")
+def get_municipalities():
     return data
 
 # Endpoint to get a municipality by name
@@ -34,7 +37,7 @@ def get_item(item_name: str):
     for item in data:
         if item['Municipality_name'].lower() == item_name.lower():
             return item
-    return "Municipality não encontrado."
+    raise HTTPException(status_code=404, detail="No municipality found.")
 
 # Endpoint to get municipalities with population greater than the specified value in 2017
 @app.get("/municipality/population/{population}")
@@ -44,7 +47,7 @@ def get_population(population: int):
     ]
     if filtered_data:
         return JSONResponse(content=filtered_data)
-    return "Nenhum Municipality encontrado com população maior que a informada."
+    raise HTTPException(status_code=404, detail="No municipality found.")
 
 # Endpoint to get municipalities that start with a specific character
 @app.get("/municipality/startswith/{char}")
@@ -54,7 +57,7 @@ def get_municipality_by_char(char):
     ]
     if filtered_data:
         return JSONResponse(content=filtered_data)
-    return "Nenhum Municipality encontrado."
+    raise HTTPException(status_code=404, detail="No municipality found.")
 
 # Endpoint to get municipalities with population greater than the specified value for a given year
 @app.get("/municipality/population/{population}/year/{year}")
@@ -65,9 +68,9 @@ def get_population_year(population: int, year: int):
         ]
         if filtered_data:
             return JSONResponse(content=filtered_data)  
-        return "Nenhum Municipality encontrado com população maior que a informada ou no year reqisitado."
-    except:
-        return "There's no data for the requested year."
+        raise HTTPException(status_code=404, detail="No municipality found with the specified criteria.")
+    except KeyError:
+        raise HTTPException(status_code=400, detail="There's no data for the requested year.")
 
 # Endpoint to get municipalities with IDHM greater than the specified value
 @app.get("/municipality/idhm_higher_than/{idhm}")
@@ -77,7 +80,7 @@ def get_idhm(idhm: float):
     ]
     if filtered_data:
         return JSONResponse(content=filtered_data)
-    return "Nenhum Municipality encontrado com IDHM maior que o informado."
+    raise HTTPException(status_code=404, detail="No municipality found.")
 
 # Endpoint to get municipalities with IDHM lower than the specified value
 @app.get("/municipality/idhm_lower_than/{idhm}")
@@ -87,7 +90,7 @@ def get_idhm(idhm: float):
     ]
     if filtered_data:
         return JSONResponse(content=filtered_data)
-    return "Nenhum Municipality encontrado com IDHM menor que o informado."
+    raise HTTPException(status_code=404, detail="No municipality found.")
 
 # Endpoint to get municipalities with population greater than the specified value and IDHM greater than the specified value in 2017
 @app.get("/municipality/population/{population}/idhm/{idhm}")
@@ -97,7 +100,7 @@ def get_population_idhm(population: int, idhm: float):
     ]
     if filtered_data:
         return JSONResponse(content=filtered_data)
-    return "Nenhum Municipality encontrado com população maior que a informada ou IDHM maior que o informado."
+    raise HTTPException(status_code=404, detail="No municipality found.")
 
 # Endpoint to get municipalities with population greater than the specified value, IDHM greater than the specified value, for a given year
 @app.get("/municipality/population/{population}/idhm/{idhm}/year/{year}")
@@ -108,6 +111,6 @@ def get_population_idhm_year(population: int, idhm: float, year: int):
         ]
         if filtered_data:
             return JSONResponse(content=filtered_data)
-        return "Nenhum Municipality encontrado com população maior que a informada, IDHM maior que o informado ou no year reqisitado."
-    except:
-        return "There's no data for the requested year."
+        raise HTTPException(status_code=404, detail="No municipality found with the specified criteria.")
+    except KeyError:
+        raise HTTPException(status_code=400, detail="There's no data for the requested year.")
