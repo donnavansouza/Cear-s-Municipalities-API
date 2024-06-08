@@ -114,7 +114,6 @@ This FastAPI application provides endpoints to query Brazil's State Ceará munic
 
 ## Using Docker
 1. **Clone the Repository:**
-
   git clone https://your-repo-url
   cd your-repo-directory
 
