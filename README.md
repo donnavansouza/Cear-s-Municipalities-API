@@ -95,6 +95,8 @@ This FastAPI application provides endpoints to query Brazil's State Ceará munic
 
 ## How to Run the Application
 
+## Using Python Locally
+
 1. **Clone the Repository**
 
 
@@ -109,3 +111,21 @@ This FastAPI application provides endpoints to query Brazil's State Ceará munic
 
 5. **Access the Endpoints**
     Once the application is running, access the endpoints by visiting http://127.0.0.1:8000/ in your web browser or using a tool like cURL or Postman.
+
+## Using Docker
+1. **Clone the Repository:**
+
+  git clone https://your-repo-url
+  cd your-repo-directory
+
+2. **Ensure Docker is Installed:**
+  Make sure you have Docker installed on your machine. You can download and install it from the Docker website.
+
+3. **Build the Docker Image:**
+  docker build -t my-fastapi-app .
+
+4. **Run the Docker Container:**
+  docker run -d -p 8000:8000 my-fastapi-app
+
+5. **Access the Endpoints:**
+  Once the application is running, access the endpoints by visiting http://localhost:8000/ in your web browser or using a tool like cURL or Postman.
